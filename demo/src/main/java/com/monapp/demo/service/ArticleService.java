@@ -1,10 +1,9 @@
 package com.monapp.demo.service;
 
 import com.monapp.demo.Entity.Article;
+import com.monapp.demo.Entity.Comment;
 import com.monapp.demo.repository.ArticleRepository;
 import com.monapp.demo.repository.CommentRepository;
-import com.monapp.demo.Entity.Comment;
-                                                                     
 
 import java.util.List;
 import lombok.*;
