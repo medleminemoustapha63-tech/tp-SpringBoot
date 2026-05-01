@@ -1,30 +1,31 @@
 package com.monapp.demo.service;
 
-
 import com.monapp.demo.Entity.Product;
-import com.monapp.demo.repository.ProductRepository ;
-
-import java.util.List;
-
+import com.monapp.demo.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    public ProductService(ProductRepository productRepository){
-        this.productRepository=productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
-    public Product saveProduct(Product product){
+
+    public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
-    public List<Product> getAllProducts(){
+
+    public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
-   
-    public Product getById(Long id){
+
+    public Product getById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
-    public void deleteProduct(Long id){
+
+    public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 }

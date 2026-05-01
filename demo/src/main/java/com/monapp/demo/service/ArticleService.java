@@ -7,14 +7,13 @@ import com.monapp.demo.repository.CommentRepository;
 
 import java.util.List;
 import lombok.*;
-
 import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 @Getter
 @Setter
 public class ArticleService {
-    
+     
      ArticleRepository articleRepository;
      CommentRepository commentRepository;
     
