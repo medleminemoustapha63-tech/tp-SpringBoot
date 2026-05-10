@@ -25,6 +25,7 @@ public class SecurityConfig {
                 .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/shop/products", "/").permitAll()
                 .requestMatchers("/mes-commandes/**", "/checkout/**", "/cart/**").authenticated()
+                .requestMatchers("/products/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
