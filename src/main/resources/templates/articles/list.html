@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des produits</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <!-- En-tête avec utilisateur connecté -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>🛍️ Liste des produits</h1>
+        <div>
+            <span class="badge bg-info fs-6 me-2">
+                👋 Bienvenue, <span sec:authentication="name"></span>
+            </span>
+            <a th:href="@{/shop/orders}" class="btn btn-info btn-sm">📦 Mes commandes</a>
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm">🚪 Déconnexion</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Messages flash -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <!-- Bouton Ajouter (visible seulement pour ADMIN) -->
+    <a th:href="@{/products/new}" class="btn btn-primary mb-3" sec:authorize="hasRole('ADMIN')">➕ Nouveau produit</a>
+
+    <!-- Tableau des produits -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Prix</th>
+                    <th>Stock</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.id}"></td>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.description}"></td>
+                    <td th:text="${product.price} + ' €'"></td>
+                    <td th:text="${product.stock}"></td>
+                    <td>
+                        <!-- Voir -->
+                        <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-info btn-sm">👁️ Voir</a>
+                        
+                        <!-- Modifier (ADMIN seulement) -->
+                        <a sec:authorize="hasRole('ADMIN')" 
+                           th:href="@{/products/{id}/edit(id=${product.id})}" 
+                           class="btn btn-warning btn-sm">✏️ Modifier</a>
+                        
+                        <!-- Acheter -->
+                        <form th:action="@{/shop/add-to-cart/{id}(id=${product.id})}" 
+                              method="post" style="display:inline;">
+                            <input type="number" name="quantity" value="1" min="1" 
+                                   th:max="${product.stock}" style="width:60px;" required>
+                            <button type="submit" class="btn btn-success btn-sm">🛒 Acheter</button>
+                        </form>
+                        
+                        <!-- Supprimer (ADMIN seulement) -->
+                        <form sec:authorize="hasRole('ADMIN')" 
+                              th:action="@{/products/{id}/delete(id=${product.id})}" 
+                              method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" 
+                                    onclick="return confirm('Confirmer la suppression ?')">🗑️ Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Message si liste vide -->
+    <div th:if="${#lists.isEmpty(products)}" class="alert alert-warning">
+        ⚠️ Aucun produit trouvé.
+    </div>
+</div>
+</body>
+</html>

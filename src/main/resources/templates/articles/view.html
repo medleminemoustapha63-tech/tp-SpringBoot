@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail de l'article</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Article -->
+                <div class="card shadow mb-4" th:if="${article != null}">
+                    <div class="card-header bg-primary text-white">
+                        <h1 class="h3 mb-0">
+                            <i class="fas fa-newspaper"></i> Détail de l'article
+                        </h1>
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title" th:text="${article.title}">Titre de l'article</h2>
+                        <div class="text-muted mb-3">
+                            <small>
+                                <i class="fas fa-id-badge"></i> ID: <span th:text="${article.id}">1</span>
+                            </small>
+                        </div>
+                        <hr>
+                        <div class="card-text">
+                            <strong><i class="fas fa-align-left"></i> Contenu :</strong>
+                            <p class="mt-2" th:text="${article.content}" style="white-space: pre-wrap; line-height: 1.6;">Contenu de l'article</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex gap-2">
+                            <a th:href="@{/form/{id}(id=${article.id})}" class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                            <form th:action="@{/delete-article/{id}(id=${article.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Supprimer cet article ?')">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </button>
+                            </form>
+                            <a href="/list" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Retour à la liste
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Commentaires -->
+                <div class="card shadow">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="h5 mb-0">
+                            <i class="fas fa-comments"></i> Commentaires 
+                            <span class="badge bg-light text-dark rounded-pill" th:text="${#lists.size(comments)}">0</span>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Formulaire pour ajouter un commentaire -->
+                        <div class="alert alert-light border mb-4">
+                            <h4 class="h6 mb-3"><i class="fas fa-plus-circle"></i> Ajouter un commentaire</h4>
+                            <form th:action="@{/add-comment/{articleId}(articleId=${article.id})}" method="post">
+                                <div class="mb-3">
+                                    <label class="form-label">Auteur :</label>
+                                    <input type="text" name="author" class="form-control" required 
+                                           placeholder="Votre nom"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Commentaire :</label>
+                                    <textarea name="text" class="form-control" rows="3" required 
+                                              placeholder="Votre commentaire..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-paper-plane"></i> Publier
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- Liste des commentaires -->
+                        <h4 class="h6 mb-3"><i class="fas fa-list"></i> Liste des commentaires</h4>
+                        
+                        <div th:if="${not #lists.isEmpty(comments)}">
+                            <div class="list-group">
+                                <div th:each="comment : ${comments}" class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <strong class="text-primary">
+                                                <i class="fas fa-user"></i> <span th:text="${comment.author}">Auteur</span>
+                                            </strong>
+                                            <p class="mb-1 mt-2" th:text="${comment.text}" style="line-height: 1.4;"></p>
+                                        </div>
+                                        <form th:action="@{/delete-comment/{articleId}/{commentId}(articleId=${article.id}, commentId=${comment.id})}" 
+                                              method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" 
+                                                    onclick="return confirm('Supprimer ce commentaire ?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div th:if="${#lists.isEmpty(comments)}" class="alert alert-secondary text-center">
+                            <i class="fas fa-comment-slash"></i> Aucun commentaire pour cet article.
+                            <br> Soyez le premier à commenter !
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

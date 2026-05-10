@@ -4,9 +4,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,39 +19,15 @@ public class Product {
     private String name;
     private String description;
     private double price;
+    private String actions;
+    private int stock;          // ← ajouté pour correspondre au formulaire
 
-    public Product(){}
-    public Product(String name,String description,double price){
-        this.name=name;
-        this.description=description;
-        this.price=price;
+    // Constructeur utile sans l'id (auto-généré)
+    public Product(String name, String description, double price, String actions, int stock) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.actions = actions;
+        this.stock = stock;
     }
-    // public Long getId(){
-    //     return id;
-    // }
-    // public void setId(Long id){
-    //     this.id=id;
-    // }
-    // public String getName(){
-    //     return name;
-    // }
-    // public void setName(){
-    //     this.name=name;
-    //  }
-    // public String getDescription(){
-    //     return description;
-    // }
-    // public void setDescription(){
-    //     this.description=description;
-    //  }
-    //  public double getPrice(){
-    //     return price;
-    //  }
-    //  public void setPrice(){
-    //     this.price=price;
-    //  }
-
-
-
-    
 }
